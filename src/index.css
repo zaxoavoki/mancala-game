@@ -1,0 +1,95 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap');
+
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    font-family: 'Poppins', sans-serif;
+}
+
+#root {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.row {
+    position: relative;
+    display: flex;
+    width: 100%;
+}
+
+.cell:hover {
+    background: #ddd;
+}
+.hidden-cell:hover, .disabled {
+    background: transparent !important;
+}
+.cell {
+    cursor: pointer;
+    margin: .2rem;
+    height: 80px;
+    width: 80px;
+    background: #eee;
+    border: solid 1px rgb(134, 134, 134);
+    border-radius: .3rem;
+    font-size: 1.6rem;
+    font-weight: bold;
+    color: rgb(121, 121, 121);
+    text-align: center;
+    line-height: 80px;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    box-sizing: border-box;
+}
+
+.hidden-cell {
+    border: none;
+    background: transparent;
+}
+
+#panel {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 50px;
+}
+
+.btns {
+    text-align: center;
+}
+
+.btn {
+    cursor: pointer;
+    background: rgb(0, 0, 0);
+    padding: 10px 15px;
+    border: none;
+    border-radius: 0.2rem;
+    color: #fff;
+    margin: 5px;
+}
+
+.btn:hover {
+    background: #252525;
+}
+
+.select {
+    display: block;
+    margin: 0 auto;
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.player-select {
+    padding: 10px 15px;
+    margin: 0 15px;
+}
+
+input[type="range"] {
+    margin-right: 15px;
+}
