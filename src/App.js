@@ -3,13 +3,15 @@ import _ from "lodash";
 import Player from "./data/Player";
 import { computeMove, checkWin } from "./logic/game";
 
+export const initialState = {
+  winner: false,
+  started: false,
+  turn: null,
+  players: [],
+};
+
 function App() {
-  const [state, setState] = useState({
-    winner: false,
-    started: false,
-    turn: null,
-    players: [],
-  });
+  const [state, setState] = useState(initialState);
 
   useEffect(() => {
     if (
@@ -53,25 +55,20 @@ function App() {
   }
 
   function restartGame() {
-    setState({
-      started: false,
-      winner: false,
-      turn: null,
-      players: [],
-    });
+    setState(initialState);
   }
 
   function addPlayer(index, type) {
     const [name, playerType] = type.split("-");
     setState((p) => {
       const players = p.players;
-      players[index] = new Player(name, !index, playerType);
+      players[index] = new Player(index, name, !index, playerType);
       return { ...p, players };
     });
   }
 
   function setBotDifficulthy(index, value) {
-    setState(p => {
+    setState((p) => {
       if (p.players[index]) {
         p.players[index].lvl = +value;
       }
@@ -99,7 +96,21 @@ function App() {
                 <option value="A-player">Player</option>
                 <option value="A-bot">Bot</option>
               </select>
-              <input defaultValue="4" step="1" type="range" min="1" max="10" onClick={(e) => setBotDifficulthy(0, e.target.value) }/>
+              {state.players[0] && state.players[0].type === "bot" && (
+                <>
+                  <span style={{ margin: "0 1rem 0 0" }}>
+                    {state.players[0].lvl}
+                  </span>
+                  <input
+                    defaultValue="4"
+                    step="1"
+                    type="range"
+                    min="1"
+                    max="10"
+                    onClick={(e) => setBotDifficulthy(0, e.target.value)}
+                  />
+                </>
+              )}
               Player B:
               <select
                 required
@@ -114,7 +125,21 @@ function App() {
                 <option value="B-player">Player</option>
                 <option value="B-bot">Bot</option>
               </select>
-              <input defaultValue="4" step="1" type="range" min="1" max="10" onChange={(e) => setBotDifficulthy(1, e.target.value)} />
+              {state.players[1] && state.players[1].type === "bot" && (
+                <>
+                  <span style={{ margin: "0 1rem 0 0" }}>
+                    {state.players[1].lvl}
+                  </span>
+                  <input
+                    defaultValue="4"
+                    step="1"
+                    type="range"
+                    min="1"
+                    max="10"
+                    onChange={(e) => setBotDifficulthy(1, e.target.value)}
+                  />
+                </>
+              )}
             </div>
           ) : (
             ""
