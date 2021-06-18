@@ -1,4 +1,4 @@
-import { minimax, minimaxWithPrunning } from "../logic/ai";
+import { minimaxWithPrunning } from "../lib/ai";
 
 export default class Player {
   constructor(index, name, reversed = false, playerType='player') {
@@ -6,7 +6,7 @@ export default class Player {
     this.field = [4, 4, 4, 4, 4, 4, 0];
     this.reversed = reversed;
     this.type = playerType;
-    this.lvl = 5;
+    this.lvl = 1;
     this.index = index;
   }
 
@@ -15,8 +15,6 @@ export default class Player {
   }
 
   makeDecision(state) {
-    // more efficient algorithm
     return minimaxWithPrunning(-Infinity, Infinity, 0, true, state, this.lvl, this.index);
-    // return minimax(0, true, state, this.lvl, this.index);
   }
 }

@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import _ from "lodash";
-import Player from "./data/Player";
-import { computeMove, checkWin } from "./logic/game";
+import { computeMove, checkWin } from "./lib/game";
+import PlayerSetup from "./components/PlayerSetup";
+import Field from "./components/Field";
 
 export const initialState = {
   winner: false,
@@ -11,7 +12,7 @@ export const initialState = {
 };
 
 function App() {
-  const [state, setState] = useState(initialState);
+  const [state, setState] = useState(_.cloneDeep(initialState));
 
   useEffect(() => {
     if (
@@ -27,7 +28,6 @@ function App() {
     const { index } = state.players[state.turn].makeDecision(
       _.cloneDeep(state)
     );
-    console.log("index", index);
     moveStones(index);
   }
 
@@ -55,25 +55,7 @@ function App() {
   }
 
   function restartGame() {
-    setState(initialState);
-  }
-
-  function addPlayer(index, type) {
-    const [name, playerType] = type.split("-");
-    setState((p) => {
-      const players = p.players;
-      players[index] = new Player(index, name, !index, playerType);
-      return { ...p, players };
-    });
-  }
-
-  function setBotDifficulthy(index, value) {
-    setState((p) => {
-      if (p.players[index]) {
-        p.players[index].lvl = +value;
-      }
-      return { ...p };
-    });
+    setState(_.cloneDeep(initialState));
   }
 
   return (
@@ -82,102 +64,39 @@ function App() {
         <div id="panel">
           {!state.started && !state.winner ? (
             <div className="select">
-              Player A:
-              <select
-                required
-                id="playerA"
-                className="player-select"
-                onChange={(e) => addPlayer(0, e.target.value)}
-                defaultValue={""}
-              >
-                <option disabled value="">
-                  Type
-                </option>
-                <option value="A-player">Player</option>
-                <option value="A-bot">Bot</option>
-              </select>
-              {state.players[0] && state.players[0].type === "bot" && (
-                <>
-                  <span style={{ margin: "0 1rem 0 0" }}>
-                    {state.players[0].lvl}
-                  </span>
-                  <input
-                    defaultValue="4"
-                    step="1"
-                    type="range"
-                    min="1"
-                    max="10"
-                    onClick={(e) => setBotDifficulthy(0, e.target.value)}
-                  />
-                </>
-              )}
-              Player B:
-              <select
-                required
-                id="playerA"
-                className="player-select"
-                onChange={(e) => addPlayer(1, e.target.value)}
-                defaultValue={""}
-              >
-                <option disabled value="">
-                  Type
-                </option>
-                <option value="B-player">Player</option>
-                <option value="B-bot">Bot</option>
-              </select>
-              {state.players[1] && state.players[1].type === "bot" && (
-                <>
-                  <span style={{ margin: "0 1rem 0 0" }}>
-                    {state.players[1].lvl}
-                  </span>
-                  <input
-                    defaultValue="4"
-                    step="1"
-                    type="range"
-                    min="1"
-                    max="10"
-                    onChange={(e) => setBotDifficulthy(1, e.target.value)}
-                  />
-                </>
-              )}
+              <PlayerSetup state={state} setState={setState} index={0} />
+              <PlayerSetup state={state} setState={setState} index={1} />
             </div>
           ) : (
             ""
           )}
-          <div className="btns">
-            {state.winner && (
-              <button onClick={() => restartGame()} className="btn">
-                New game
-              </button>
-            )}
-            {!state.started && (
-              <button onClick={() => startGame()} className="btn">
-                Start
-              </button>
-            )}
-          </div>
+          {state.winner && (
+            <button onClick={() => restartGame()} className="m-auto btn">
+              New game
+            </button>
+          )}
+          {!state.started && state.players.length === 2 && (
+            <button onClick={() => startGame()} className="m-auto btn">
+              Start
+            </button>
+          )}
         </div>
       ) : (
         ""
       )}
       {state.winner ? <h3>Game over, Player {state.winner.name} won!</h3> : ""}
       {!state.started ? <h2>Choose players and press Start</h2> : ""}
-      {state.players.map((player, j) => (
-        <div key={Date.now() + Math.random().toFixed(j)} className="row">
-          {!player.reversed && <div className="hidden-cell cell" />}
-          {player.getField().map((stones, i) => (
-            <div
-              key={Date.now() + Math.random().toFixed(i)}
-              className={`${state.turn !== j ? "disabled" : ""} cell`}
-              onClick={() =>
-                state.turn === j && moveStones(player.reversed ? 6 - i : i)
-              }
-            >
-              {stones}
-            </div>
-          ))}
-        </div>
-      ))}
+
+      <Field state={state} moveStones={moveStones} />
+      {state.started && !state.winner && (
+        <button
+          style={{ marginTop: "0.5rem" }}
+          onClick={() => restartGame()}
+          className="btn m-auto"
+        >
+          Reset game
+        </button>
+      )}
     </div>
   );
 }

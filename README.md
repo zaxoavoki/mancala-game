@@ -20,7 +20,3 @@ The player's score is calculated with simple heuristic: sum of stones in all pla
 ![Main view](https://imgur.com/RWfHqmy.png)
 
 ![Won view](https://imgur.com/cOwVzJv.png)
-
-### To-do
-
-[ ] - Hide difficulthy level when player is selected
